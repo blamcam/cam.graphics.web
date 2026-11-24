@@ -1,14 +1,21 @@
+const instances = new WeakMap();
 
-function draggers(selector) {
-    const isInteractive = target => target.closest(
+function isInteractive(target) {
+    return target.closest(
         'input, textarea, select, [contenteditable="true"], [data-no-drag]'
     );
+}
 
+function draggers(selector) {
     document.querySelectorAll(selector).forEach(element => {
+
+        // Don't initialise elements that are already being managed.
+        if (instances.has(element)) return;
+
         let isDragging = false;
         let hasDragged = false;
         let suppressClick = false;
-        let wasOpen = false;
+        let wasOpen = element.classList.contains('open');
 
         let startX = 0;
         let startY = 0;
@@ -20,6 +27,8 @@ function draggers(selector) {
         let pointerId = null;
 
         const dragThreshold = 5;
+        const controller = new AbortController();
+        const { signal } = controller;
 
         element.style.translate = '0px 0px';
         element.style.cursor = 'grab';
@@ -32,12 +41,11 @@ function draggers(selector) {
 
         element.addEventListener('dragstart', e => {
             e.preventDefault();
-        });
+        }, { signal });
 
         element.addEventListener('pointerdown', e => {
             if (e.button !== 0) return;
             if (window.matchMedia('(pointer: coarse)').matches) return;
-
             if (isInteractive(e.target)) return;
 
             isDragging = true;
@@ -49,7 +57,8 @@ function draggers(selector) {
 
             initialX = currentX;
             initialY = currentY;
-        });
+
+        }, { signal });
 
         document.addEventListener('pointermove', e => {
             if (!isDragging || e.pointerId !== pointerId) return;
@@ -57,7 +66,6 @@ function draggers(selector) {
             const deltaX = e.clientX - startX;
             const deltaY = e.clientY - startY;
 
-            // Check total movement from initial pointer position
             if (
                 !hasDragged &&
                 (Math.abs(deltaX) > dragThreshold ||
@@ -68,7 +76,6 @@ function draggers(selector) {
                 element.classList.add('dragging');
                 element.style.cursor = 'grabbing';
 
-                // Capture only once an actual drag begins
                 element.setPointerCapture(pointerId);
             }
 
@@ -78,9 +85,10 @@ function draggers(selector) {
 
                 element.style.translate = `${currentX}px ${currentY}px`;
             }
-        });
 
-        element.addEventListener('pointerup', e => {
+        }, { signal });
+
+        document.addEventListener('pointerup', e => {
             if (!isDragging || e.pointerId !== pointerId) return;
 
             isDragging = false;
@@ -90,9 +98,12 @@ function draggers(selector) {
             element.classList.remove('dragging');
 
             pointerId = null;
-        });
 
-        element.addEventListener('pointercancel', () => {
+        }, { signal });
+
+        document.addEventListener('pointercancel', e => {
+            if (e.pointerId !== pointerId) return;
+
             isDragging = false;
             hasDragged = false;
             suppressClick = false;
@@ -100,19 +111,20 @@ function draggers(selector) {
 
             element.style.cursor = 'grab';
             element.classList.remove('dragging');
-        });
 
-        // Capture clicks before they reach child links
+        }, { signal });
+
+        // Suppress clicks after dragging.
         document.addEventListener('click', e => {
             if (!suppressClick) return;
 
-            // Only suppress clicks associated with this draggable
             if (element.contains(e.target)) {
                 e.preventDefault();
                 e.stopPropagation();
                 suppressClick = false;
             }
-        }, true);
+
+        }, { capture: true, signal });
 
         const resetDragPosition = () => {
             currentX = 0;
@@ -124,7 +136,7 @@ function draggers(selector) {
             element.style.translate = '0px 0px';
         };
 
-        // Watch for the open class being added
+        // Watch for the open class being added.
         const observer = new MutationObserver(() => {
             const isOpen = element.classList.contains('open');
 
@@ -140,7 +152,43 @@ function draggers(selector) {
             attributeFilter: ['class']
         });
 
+        // Store cleanup function for this element.
+        instances.set(element, () => {
+            controller.abort();
+            observer.disconnect();
+
+            element.classList.remove('dragging');
+            element.style.cursor = '';
+
+            isDragging = false;
+            hasDragged = false;
+            suppressClick = false;
+            pointerId = null;
+        });
+
     });
 }
 
-export { draggers };
+// Clean up draggable elements within a particular container.
+function cleanupDraggers(container) {
+    container.querySelectorAll('.draggable').forEach(element => {
+        const cleanup = instances.get(element);
+
+        if (cleanup) {
+            cleanup();
+            instances.delete(element);
+        }
+    });
+
+    // Also handle the container itself if it's draggable.
+    if (container.matches('.draggable')) {
+        const cleanup = instances.get(container);
+
+        if (cleanup) {
+            cleanup();
+            instances.delete(container);
+        }
+    }
+}
+
+export { draggers, cleanupDraggers };

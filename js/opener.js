@@ -33,6 +33,20 @@ function openers(paperPhysics) {
             target.classList.toggle('open');
         });
     });
+
+    document.addEventListener('click', e => {
+        const link = e.target.closest('a[href]');
+        if (!link) return;
+
+        const opener = link.closest('.open');
+
+        if (!opener) return;
+
+        const shouldClose = link.closest('[data-close-on-link]');
+        if (!shouldClose) return;
+
+        closeOpener("#" + opener.id, paperPhysics);
+    });
 }
 
 function closeOpener(element, paperPhysics) {

@@ -8,36 +8,31 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 
-import { createDiffractionMaterial, updateDiffractionLight } from
-    './diffraction.js';
+import { createDiffractionMaterial, updateDiffractionLight } from './diffraction.js';
 
-import { loadFBX } from
-    './modelLoader.js';
+import { loadFBX } from './modelLoader.js';
 
-import { typewriter } from
-    './typewriter.js';
-    './modelLoader.js';
+import { navigation } from './navigation.js';
 
-import { watchScroll } from
-    './scrollWatcher.js';
+import { typewriter } from './typewriter.js';
 
-import { draggers } from
-    './draggers.js';
+import { watchScroll } from './scrollWatcher.js';
 
-import { hoverThumbs } from
-    './hoverThumb.js';
+import { draggers, cleanupDraggers } from './draggers.js';
 
-import { initPaperPhysics } from
-    './paper.js';
+import { hoverThumbs } from './hoverThumb.js';
 
-import { openers, closeOpener, openOpener } from
-    './opener.js';
+import { initPaperPhysics } from './paper.js';
+
+import { openers, closeOpener, openOpener } from './opener.js';
 
 const Clamp = (val, min = 0, max = 1) => Math.min(Math.max(val, min), max);
 
 // --------------------------------------------------
 // CONSTANTS
 // --------------------------------------------------
+
+let pageCleanups = [];
 
 // Starting angle for disc
 const baseAngle = new THREE.Vector3(0.7,0.5,0.3);
@@ -134,7 +129,7 @@ composer.addPass(bloomPass);
 composer.addPass(outputPass);
 
 const container = document.getElementById('three-container');
-const scrollScale = document.getElementById('scroll-scale');
+let scrollScale = document.getElementById('scroll-scale');
 
 container.appendChild(renderer.domElement);
 
@@ -268,7 +263,7 @@ window.addEventListener('mousemove', (event) => {
 // Runs mainly on scroll events but also gets called when the window is resized
 // Sets the size of the renderer container
 function processContainerSize() {
-    if (document.body.classList.contains("home")) {
+    if (scrollScale !== null) {
 
         // console.log(window.scrollY + " , " + window.innerHeight);
 
@@ -294,8 +289,6 @@ function processContainerSize() {
 
         // scrollScale.style = "height:" + scaleHeight * containerHeight + "px";
         scrollScale.style = "transform: scaley(" + scaleHeight * 100 + "%)";
-
-
     }
 
    
@@ -339,29 +332,54 @@ resizeObserver.observe(container);
 window.addEventListener('resize', processContainerSize);
 window.addEventListener('scroll', processContainerSize, { passive: true });
 
-// --------------------------------------------------
-// TYPEWRITER
-// --------------------------------------------------
-
-
-
-document.addEventListener("DOMContentLoaded",() => {
-    document.body.classList.add("loaded");
-    updateSitePadding();
-    processContainerSize();
-    typewriter();
-});
 
 // --------------------------------------------------
 // INTERACTIVE FEATURES
 // --------------------------------------------------
 
-$('.expandable').on('click', function() {
-    $(this).toggleClass('expanded');
+$(document).ready(function() {
+    document.body.classList.add("loaded");
+    updateSitePadding();
+    processContainerSize();
 });
 
-watchScroll('.watch-scroll');
-draggers('.draggable');
+
+function cleanupPage() {
+    // Run cleanup functions returned by page scripts.
+    pageCleanups.forEach(cleanup => cleanup());
+    pageCleanups = [];
+
+    // Clean up draggers inside page content only.
+    const content = document.querySelector('#page-content');
+
+    if (content) {
+        cleanupDraggers(content);
+    }
+}
+
+function initPage() {
+    // Protect against accidentally initialising a page twice.
+    cleanupPage();
+
+    // Store cleanup functions.
+    pageCleanups.push(typewriter());
+    pageCleanups.push(watchScroll('.watch-scroll'));
+
+    // Draggers have their own element-based cleanup system.
+    draggers('.draggable');
+
+    $('.expandable').off('click').on('click', function() {
+        $(this).toggleClass('expanded');
+    });
+
+    scrollScale = document.getElementById('scroll-scale');
+    document.body.classList.add("loaded");
+}
+
+initPage();
+
+navigation(initPage, cleanupPage);
+
 hoverThumbs();
 
 const paperPhysics = initPaperPhysics();
@@ -369,12 +387,6 @@ const paperPhysics = initPaperPhysics();
 openers(paperPhysics);
 // openers();
 
-document.querySelectorAll('a').forEach(link => {
-  if (link.href === window.location.href) {
-    link.classList.add('active');
-    link.setAttribute('aria-current', 'page'); // Recommended for accessibility
-  }
-});
 
 
 

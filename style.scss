@@ -134,7 +134,12 @@ a {
     }
 }
 
-
+.typewriter {
+    opacity: 0;
+    &.typewriter-started {
+        opacity: 1;
+    }
+}
 
 
 .wait-for-typewriter {
@@ -414,6 +419,7 @@ body:not(.home) {
     --bg-color: white;
     text-decoration: none;
     position: relative;
+    transition: filter 0.2s;
 
     // display: grid;
     // grid-template-columns: 2fr 1fr 1fr 2fr;
@@ -460,6 +466,10 @@ body:not(.home) {
 
         &.dragging {
             transition: none;
+        }
+
+        &:hover {
+
         }
     }
 
@@ -517,9 +527,20 @@ body:not(.home) {
         }
     }
 
+    img, .project-info-wrapper {
+        transition: transform 0.2s;
+    }
+
     &:hover {
         --text-color: #{$grey};
         --bg-color: #{$black};
+
+        
+        filter: drop-shadow(28px 26px 20px rgba(0, 0, 0, 0.5));
+        img, .project-info-wrapper {
+            transform: translate(-1rem, -1rem);
+        }
+        
     }
 
     @media screen and (max-width: 640px) {
@@ -935,7 +956,7 @@ body:not(.home) {
     }
 
     &.open .paper-box-inner {
-        animation: printer-feed 1.2s;
+        animation: printer-feed 0.8s;
     }
 
     @media screen and (max-width: 640px) {

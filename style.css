@@ -188,6 +188,13 @@ a.button {
   content: "← ";
 }
 
+.typewriter {
+  opacity: 0;
+}
+.typewriter.typewriter-started {
+  opacity: 1;
+}
+
 .wait-for-typewriter {
   -webkit-transition: clip-path 0.2s;
   transition: clip-path 0.2s;
@@ -454,6 +461,10 @@ body.home:not(.scrolled) .nav-wrapper {
   --bg-color: white;
   text-decoration: none;
   position: relative;
+  -webkit-transition: -webkit-filter 0.2s;
+  transition: -webkit-filter 0.2s;
+  transition: filter 0.2s;
+  transition: filter 0.2s, -webkit-filter 0.2s;
 }
 .project-item.watch-scroll a {
   -webkit-transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
@@ -528,9 +539,21 @@ body.home:not(.scrolled) .nav-wrapper {
   font-size: 1rem;
   margin-bottom: 0;
 }
+.project-item img, .project-item .project-info-wrapper {
+  -webkit-transition: -webkit-transform 0.2s;
+  transition: -webkit-transform 0.2s;
+  transition: transform 0.2s;
+  transition: transform 0.2s, -webkit-transform 0.2s;
+}
 .project-item:hover {
   --text-color: #D4D4D4;
   --bg-color: #000;
+  -webkit-filter: drop-shadow(28px 26px 20px rgba(0, 0, 0, 0.5));
+          filter: drop-shadow(28px 26px 20px rgba(0, 0, 0, 0.5));
+}
+.project-item:hover img, .project-item:hover .project-info-wrapper {
+  -webkit-transform: translate(-1rem, -1rem);
+          transform: translate(-1rem, -1rem);
 }
 @media screen and (max-width: 640px) {
   .project-item a {
@@ -878,8 +901,8 @@ body.home:not(.scrolled) .nav-wrapper {
   font-size: 1em;
 }
 .paper-box.open .paper-box-inner {
-  -webkit-animation: printer-feed 1.2s;
-          animation: printer-feed 1.2s;
+  -webkit-animation: printer-feed 0.8s;
+          animation: printer-feed 0.8s;
 }
 @media screen and (max-width: 640px) {
   .paper-box {
