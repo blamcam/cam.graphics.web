@@ -90,7 +90,7 @@ html {
 body {
   background: var(--bg-color);
   color: var(--text-color);
-  font-family: Arial, sans-serif;
+  font-family: "Archivo", "Arial", sans-serif;
   font-size: 1rem;
   padding: var(--site-padding);
   --text-color: #000;
@@ -229,6 +229,7 @@ body:not(.home) {
   inset: 0;
   width: 100%;
   height: 100%;
+  contain: layout paint;
   overflow: hidden;
   border-radius: 0;
   top: 0px;
@@ -247,7 +248,6 @@ body:not(.home) {
   height: 100%;
   -webkit-mask-image: radial-gradient(circle at center, black 70%, transparent 80%);
           mask-image: radial-gradient(circle at center, black 70%, transparent 80%);
-  mix-blend-mode: difference;
 }
 body.home:not(.scrolled) #three-container {
   top: 0px;
@@ -354,8 +354,10 @@ body.home:not(.scrolled) .nav-wrapper {
   top: var(--site-padding);
   -webkit-transform-origin: top;
           transform-origin: top;
-  -webkit-transition: height 0.1s;
-  transition: height 0.1s;
+  -webkit-transition: -webkit-transform 0.1s;
+  transition: -webkit-transform 0.1s;
+  transition: transform 0.1s;
+  transition: transform 0.1s, -webkit-transform 0.1s;
   background-image: url("/assets/cameron-murray.svg");
   background-repeat: no-repeat;
   background-size: 100% 100%;
@@ -367,7 +369,8 @@ body.home:not(.scrolled) .nav-wrapper {
 }
 
 .home-intro {
-  padding-top: var(--header-height);
+  padding-top: 35vh;
+  padding-bottom: 10rem;
 }
 
 @media screen and (min-width: 1600px) {
@@ -412,7 +415,7 @@ body.home:not(.scrolled) .nav-wrapper {
   grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
   gap: var(--gap);
   margin-top: 4rem;
-  margin-bottom: 4rem;
+  margin-bottom: 8rem;
 }
 @supports not (display: grid-lanes) {
   .home-projects {
@@ -423,9 +426,6 @@ body.home:not(.scrolled) .nav-wrapper {
     -webkit-column-gap: var(--gap);
        -moz-column-gap: var(--gap);
             column-gap: var(--gap);
-  }
-  .home-projects .project-item:nth-child(1) {
-    margin-top: 50%;
   }
   .home-projects .project-item {
     -webkit-column-break-inside: avoid;
@@ -533,7 +533,7 @@ body.home:not(.scrolled) .nav-wrapper {
   --bg-color: #000;
 }
 @media screen and (max-width: 640px) {
-  .project-item {
+  .project-item a {
     --mobile-extra-padding: 200px;
   }
   .project-item img {
@@ -553,7 +553,7 @@ body.home:not(.scrolled) .nav-wrapper {
   left: 0px;
   right: auto;
 }
-.project-item.text-top {
+.project-item.text-top a {
   padding-top: var(--mobile-extra-padding);
 }
 .project-item.text-top .project-info-wrapper {
@@ -798,8 +798,8 @@ body.home:not(.scrolled) .nav-wrapper {
   background: white;
   --text-color: black;
   z-index: 100;
-  font-size: 1rem;
-  padding: 2em;
+  font-size: 1.2rem;
+  padding: 1.4em;
   -webkit-animation: toss 0.1s forwards;
           animation: toss 0.1s forwards;
   min-width: 300px;
@@ -824,11 +824,13 @@ body.home:not(.scrolled) .nav-wrapper {
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
+  gap: 3em;
   font-family: "DotMatrix", serif;
   font-weight: bold;
   font-style: normal;
   text-transform: uppercase;
   color: black;
+  font-size: 0.8em;
 }
 .paper-box .paper-box-inner .paper-box-header span, .paper-box .paper-box-inner .paper-box-header a {
   padding: 0.3em;
@@ -845,6 +847,19 @@ body.home:not(.scrolled) .nav-wrapper {
   background: #D4D4D4;
   color: black;
 }
+.paper-box .paper-box-inner .paper-box-content {
+  font-family: "DotMatrix", serif;
+  font-style: normal;
+  text-transform: uppercase;
+  font-size: 1em;
+  line-height: 1.4;
+}
+.paper-box .paper-box-inner .paper-box-content p {
+  font-family: inherit;
+  font-size: inherit;
+  text-transform: inherit;
+  line-height: inherit;
+}
 .paper-box .paper-box-inner hr {
   margin-top: 1em;
   margin-bottom: 1em;
@@ -854,7 +869,7 @@ body.home:not(.scrolled) .nav-wrapper {
 .paper-box .paper-box-inner .box-links {
   padding: 0px;
   margin: 0px;
-  font-size: 1.2em;
+  font-size: inherit;
 }
 .paper-box .paper-box-inner .box-links li {
   margin-bottom: 0.1em;
@@ -877,6 +892,8 @@ body.home:not(.scrolled) .nav-wrapper {
   0% {
     -webkit-transform: translateY(-200%);
             transform: translateY(-200%);
+    -webkit-filter: drop-shadow(120px 60px 30px rgba(0, 0, 0, 0.8));
+            filter: drop-shadow(120px 60px 30px rgba(0, 0, 0, 0.8));
     -webkit-animation-timing-function: ease-out;
             animation-timing-function: ease-out;
   }
@@ -895,6 +912,8 @@ body.home:not(.scrolled) .nav-wrapper {
   100% {
     -webkit-transform: translateY(0);
             transform: translateY(0);
+    -webkit-filter: drop-shadow(8px 6px 0px rgba(0, 0, 0, 0.1));
+            filter: drop-shadow(8px 6px 0px rgba(0, 0, 0, 0.1));
   }
 }
 
@@ -902,6 +921,8 @@ body.home:not(.scrolled) .nav-wrapper {
   0% {
     -webkit-transform: translateY(-200%);
             transform: translateY(-200%);
+    -webkit-filter: drop-shadow(120px 60px 30px rgba(0, 0, 0, 0.8));
+            filter: drop-shadow(120px 60px 30px rgba(0, 0, 0, 0.8));
     -webkit-animation-timing-function: ease-out;
             animation-timing-function: ease-out;
   }
@@ -920,6 +941,8 @@ body.home:not(.scrolled) .nav-wrapper {
   100% {
     -webkit-transform: translateY(0);
             transform: translateY(0);
+    -webkit-filter: drop-shadow(8px 6px 0px rgba(0, 0, 0, 0.1));
+            filter: drop-shadow(8px 6px 0px rgba(0, 0, 0, 0.1));
   }
 }
 @-webkit-keyframes toss {
@@ -955,6 +978,7 @@ body.home:not(.scrolled) .nav-wrapper {
   opacity: 0;
   visibility: hidden;
   translate: -50% -50%;
+  will-change: transform;
   -webkit-transition: opacity 0.2s ease, visibility 0.2s;
   transition: opacity 0.2s ease, visibility 0.2s;
 }
@@ -975,4 +999,116 @@ body.home:not(.scrolled) .nav-wrapper {
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
+}
+
+.paper-physics-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.paper-ball {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  -o-object-fit: contain;
+     object-fit: contain;
+  pointer-events: auto;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  -webkit-user-drag: none;
+  -ms-touch-action: none;
+      touch-action: none;
+  cursor: -webkit-grab;
+  cursor: grab;
+  will-change: transform;
+}
+
+.paper-ball:active {
+  cursor: -webkit-grabbing;
+  cursor: grabbing;
+}
+
+.paper-crumple {
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  background-image: url("/assets/crumple-sheet.webp");
+  background-repeat: no-repeat;
+  background-size: 600% 100%;
+  pointer-events: none;
+  -webkit-animation: paper-crumple 200ms steps(5) forwards;
+          animation: paper-crumple 200ms steps(5) forwards;
+  -webkit-animation-iteration-count: repeat;
+          animation-iteration-count: repeat;
+}
+
+form label, form input, form textarea, form button, form div {
+  display: block;
+  margin-bottom: 0.5em;
+  width: 100%;
+}
+form input, form textarea, form button {
+  margin-bottom: 1em;
+  border-radius: 0px;
+  border: 1px solid var(--text-color);
+  padding: 0.4em 0.6em;
+}
+form input:focus, form textarea:focus, form button:focus {
+  -webkit-box-shadow: inset 0 0 0 1px var(--text-color);
+          box-shadow: inset 0 0 0 1px var(--text-color);
+  outline: none;
+}
+form input, form textarea {
+  font-family: "Archivo", "Arial", sans-serif;
+  text-transform: none;
+  font-size: 0.9em;
+}
+form textarea {
+  min-height: 200px;
+  max-height: 400px;
+  resize: none;
+}
+form button {
+  --text-color: #D4D4D4;
+  --bg-color: #000;
+  background: var(--bg-color);
+  color: var(--text-color);
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 0.8em;
+  text-align: left;
+  vertical-align: text-top;
+  cursor: pointer;
+  -webkit-transition: none;
+  transition: none;
+}
+form button:hover {
+  --text-color: #000;
+  --bg-color: #D4D4D4;
+}
+
+@-webkit-keyframes paper-crumple {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 100% 0;
+  }
+}
+
+@keyframes paper-crumple {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 100% 0;
+  }
 }

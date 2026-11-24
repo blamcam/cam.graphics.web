@@ -20,7 +20,7 @@ html {
 body {
     background: var(--bg-color);
     color: var(--text-color);
-    font-family: Arial, sans-serif;
+    font-family: "Archivo", "Arial", sans-serif;
     font-size: 1rem;
     padding: var(--site-padding);
 
@@ -182,6 +182,7 @@ body:not(.home) {
     width: 100%;
     height: 100%;
 
+    contain: layout paint;
     overflow: hidden;
 
     border-radius: 0;
@@ -209,7 +210,6 @@ body:not(.home) {
         width: 100%;
         height: 100%;
         mask-image: radial-gradient(circle at center, black 70%, transparent 80%);
-        mix-blend-mode: difference; 
     }
 
     body.home:not(.scrolled) & {
@@ -310,7 +310,7 @@ body:not(.home) {
         position: fixed;
         top: var(--site-padding);
         transform-origin: top;
-        transition: height 0.1s;
+        transition: transform 0.1s;
 
         background-image: url('/assets/cameron-murray.svg');
         background-repeat: no-repeat;
@@ -323,7 +323,8 @@ body:not(.home) {
 }
 
 .home-intro {
-    padding-top: var(--header-height);
+    padding-top: 35vh;
+    padding-bottom: 10rem;
 }
 
 
@@ -374,16 +375,20 @@ body:not(.home) {
     grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
     gap: var(--gap);
     margin-top: 4rem;
-    margin-bottom: 4rem;
+    margin-bottom: 8rem;
 
     @supports not (display: grid-lanes) {
         display: block;
         columns: var(--cols) 220px;
         column-gap: var(--gap);
 
-        .project-item:nth-child(1) {
-            margin-top: 50%;
-        }
+        // .project-item:nth-child(1) {
+        //     margin-top: 50%;
+
+        //     @media screen and (max-width: 900px) {
+        //         margin-top: 0%;
+        //     }
+        // }
 
         .project-item {
             break-inside: avoid;
@@ -521,7 +526,9 @@ body:not(.home) {
         // --width: 100%;
         // padding-top: var(--mobile-extra-padding);
         // padding-bottom: var(--mobile-extra-padding);
-        --mobile-extra-padding: 200px;
+        a {
+            --mobile-extra-padding: 200px;
+        }
 
         img {
             aspect-ratio: auto;
@@ -560,7 +567,10 @@ body:not(.home) {
     }
 
     &.text-top {
-        padding-top: var(--mobile-extra-padding);
+        a {
+            padding-top: var(--mobile-extra-padding);
+        }
+
         .project-info-wrapper {
             // grid-row-start: 1;
             top: 0px;
@@ -834,8 +844,8 @@ body:not(.home) {
         --text-color: black;
         z-index: 100;
         
-        font-size: 1rem;
-        padding: 2em;
+        font-size: 1.2rem;
+        padding: 1.4em;
         animation: toss 0.1s forwards;
         min-width: 300px;
         // text-wrap: nowrap;
@@ -857,6 +867,7 @@ body:not(.home) {
         .paper-box-header {
             display: flex;
             justify-content: space-between;
+            gap: 3em;
             // margin-bottom: 1em;
 
             font-family: "DotMatrix", serif;
@@ -864,6 +875,7 @@ body:not(.home) {
               font-style: normal;
               text-transform: uppercase;
               color: black;
+              font-size: 0.8em;
 
               span, a {
                 padding: 0.3em;
@@ -883,6 +895,21 @@ body:not(.home) {
               }
         }
 
+        .paper-box-content {
+            font-family: "DotMatrix", serif;
+          font-style: normal;
+          text-transform: uppercase;
+          font-size: 1em;
+          line-height: 1.4;
+
+          p {
+            font-family: inherit;
+            font-size: inherit;
+            text-transform: inherit;
+            line-height: inherit;
+          }
+        }
+
         hr {
             margin-top: 1em;
             margin-bottom: 1em;
@@ -893,7 +920,7 @@ body:not(.home) {
         .box-links {
             padding:0px;
             margin: 0px;
-            font-size: 1.2em;
+            font-size: inherit;
 
             li {
                 margin-bottom: 0.1em;
@@ -920,7 +947,9 @@ body:not(.home) {
 @keyframes printer-feed {
     0% {
         transform: translateY(-200%);
+        filter: drop-shadow(120px 60px 30px rgba(0, 0, 0, 0.8));
         animation-timing-function: ease-out;
+
     }
 
     45% {
@@ -935,6 +964,7 @@ body:not(.home) {
 
     100% {
         transform: translateY(0);
+        filter: drop-shadow(8px 6px 0px rgba(0, 0, 0, 0.1));
     }
 }
 
@@ -960,6 +990,7 @@ body:not(.home) {
     visibility: hidden;
 
     translate: -50% -50%;
+    will-change: transform;
 
     transition: opacity 0.2s ease, visibility 0.2s;
 
@@ -980,3 +1011,113 @@ body:not(.home) {
     user-select: none;
 }
 
+$paper-size: 65px;
+
+.paper-physics-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.paper-ball {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    display: block;
+    object-fit: contain;
+
+    pointer-events: auto;
+    user-select: none;
+    -webkit-user-drag: none;
+    touch-action: none;
+
+    cursor: grab;
+    will-change: transform;
+}
+
+.paper-ball:active {
+    cursor: grabbing;
+}
+
+.paper-crumple {
+    position: absolute;
+    width: calc($paper-size * 4);
+    height: calc($paper-size * 4);
+
+    transform: translate(-50%, -50%);
+
+    background-image: url('/assets/crumple-sheet.webp');
+    background-repeat: no-repeat;
+    background-size: 600% 100%;
+
+    pointer-events: none;
+
+    animation: paper-crumple 200ms steps(5) forwards;
+    animation-iteration-count: repeat;
+}
+
+form {
+    label, input, textarea, button, div {
+        display: block;
+        margin-bottom: 0.5em;
+        width: 100%;
+    }
+    input, textarea, button {
+        margin-bottom: 1em;
+        border-radius: 0px;
+        border: 1px solid var(--text-color);
+        padding: 0.4em 0.6em;
+
+        &:focus {
+            box-shadow: inset 0 0 0 1px var(--text-color);
+            outline: none;
+        }
+    }
+
+    input, textarea {
+        font-family: "Archivo", "Arial", sans-serif;
+        text-transform: none;
+        font-size: 0.9em;
+    }
+
+    textarea {
+        min-height: 200px;
+        max-height: 400px;
+        resize: none; 
+    }
+
+    button {
+        --text-color: #{$grey};
+        --bg-color: #{$black};
+
+
+        background: var(--bg-color);
+        color: var(--text-color);
+        text-transform: uppercase;
+        font-weight: bold;
+        font-size: 0.8em;
+        text-align: left;
+        vertical-align: text-top;
+        cursor: pointer;
+        transition: none;
+
+        &:hover {
+            --text-color: #{$black};
+            --bg-color: #{$grey};
+        }
+    }
+
+}
+
+@keyframes paper-crumple {
+    from {
+        background-position: 0 0;
+    }
+
+    to {
+        background-position: 100% 0;
+    }
+}

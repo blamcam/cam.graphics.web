@@ -12,10 +12,20 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400..700&family=Archivo:ital,wght@0,100..900;1,100..900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 
+        <meta name="description" content="I’m Cameron Murray, a graphic designer with a knack for jumping between branding, digital design, and motion.">
+        <meta name="robots" content="index, follow">
+        <link rel="canonical" href="https://cam.graphics">
+
+        <meta property="og:title" content="Cameron Murray ::::: WANDERLAND.txt">
+        <meta property="og:description" content="I’m Cameron Murray, a graphic designer with a knack for jumping between branding, digital design, and motion.">
+        <meta property="og:image" content="https://cam.graphics/cover.jpg">
+        <meta property="og:url" content="https://cam.graphics/">
+        <meta property="og:type" content="website">
+        <meta name="twitter:card" content="summary_large_image">
+
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-        <link rel="manifest" href="/site.webmanifest">
 
         <link rel="stylesheet" href="/style.css">
     </head>
@@ -32,6 +42,8 @@
         </div>
         <div class="right">
             <a href="#" data-open="#project-menu" class="projects-menu-link arrow-before">PROJECTS ↓</a>
+            <a href="#" data-open="#contact-menu" class="projects-menu-link arrow-before">CONTACT ↓</a>
+            <!-- <a href="#" data-open="#thanks-menu" class="projects-menu-link arrow-before">THANKS ↓</a> -->
             <a href="/" class="logo-link"><img src="/assets/logo-cameron-murray-inv.svg"></a>
         </div>
     </div>
@@ -46,19 +58,79 @@
             </div>
         </div>
         <hr>
-        <ul class="project-links box-links">
-            <li><a href="/black-swan-2020/" >Black Swan 2020 Season Campaign</a></li>
-            <li><a href="/karrinyup/" >Karrinyup Spring/Summer 20/21</a></li>
-            <li><a href="/new-junction/" >New Junction</a></li>
-            <li><a href="/road-train-domain/" >Road Train Domain</a></li>
-            <li><a href="/showroom-x/" >Showroom-X</a></li>
-            <li><a href="/sorted-futures/" >Sorted Futures</a></li>
-            <li><a href="/st-catherines/" >St Catherine’s College WEB</a></li>
-            <li><a href="/take1/" >TAKE1 Youth Screen Festival</a></li>
-            <li><a href="/the-fame-project/" >The Fame Project</a></li>
-            <li><a href="/till-death/" >TILL DEATH</a></li>
-            <li><a href="/wanderland/" >WAnderland</a></li>
-        </ul>
+        <div class="paper-box-content">
+            <ul class="project-links box-links">
+                <li><a href="/black-swan-2020/" >Black Swan 2020 Season Campaign</a></li>
+                <li><a href="/karrinyup/" >Karrinyup Spring/Summer 20/21</a></li>
+                <li><a href="/new-junction/" >New Junction</a></li>
+                <li><a href="/road-train-domain/" >Road Train Domain</a></li>
+                <li><a href="/showroom-x/" >Showroom-X</a></li>
+                <li><a href="/sorted-futures/" >Sorted Futures</a></li>
+                <li><a href="/st-catherines/" >St Catherine’s College WEB</a></li>
+                <li><a href="/take1/" >TAKE1 Youth Screen Festival</a></li>
+                <li><a href="/the-fame-project/" >The Fame Project</a></li>
+                <li><a href="/till-death/" >TILL DEATH</a></li>
+                <li><a href="/wanderland/" >WAnderland</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div id="contact-menu" class="paper-box draggable">
+    <div class="paper-box-inner">
+        <div class="paper-box-header">
+            <div class="title"><span>CONTACT</span></div>
+            <div class="close">
+                <a href="#" data-open="#contact-menu">X</a>
+            </div>
+        </div>
+        <hr>
+        <div class="paper-box-content">
+    <!--         <form action="https://api.web3forms.com/submit" method="POST">
+              <input type="hidden" name="access_key" value="026616a2-444a-40b1-bb40-dac949b4e60f">
+              <input type="text" name="name" required>
+              <input type="email" name="email" required>
+              <textarea name="message" required></textarea>
+              <button type="submit">Submit</button>
+            </form> -->
+
+            <p>Email me @ <a href="mailto:cameron@cam.graphics">cameron@cam.graphics</a></p>
+            <p><strong>OR</strong></p>
+
+            <form method="POST" id="form">
+
+                <input type="hidden" name="access_key" value="026616a2-444a-40b1-bb40-dac949b4e60f">
+                <input type="hidden" name="subject" value="New Submission from Web3Forms">
+                <input type="checkbox" name="botcheck" id="" style="display: none;">
+
+                <!-- Custom Form Data -->
+                <label for="email">eMail</label>
+                <input type="email" name="email" id="email" required>
+                <label for="email">Message</label>
+                <textarea name="message" id="message" height="500px" required></textarea>
+
+                <button type="submit">Submit</button>
+
+                <div id="result"></div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="thanks-menu" class="paper-box draggable">
+    <div class="paper-box-inner">
+        <div class="paper-box-header">
+            <div class="title"><span>THANK YOU :-)</span></div>
+            <div class="close">
+                <a href="#" data-open="#thanks-menu">X</a>
+            </div>
+        </div>
+        <hr>
+        <div class="paper-box-content">
+            <p>Thanks for reaching out,<br>
+            I'll get back to you soon!</p>
+        </div>
     </div>
 </div>
         <div class="main">
@@ -163,7 +235,8 @@
     "imports": {
         "three": "https://cdn.jsdelivr.net/npm/three@0.182.0/build/three.module.js",
         "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.182.0/examples/jsm/",
-        "jquery": "https://code.jquery.com/jquery-4.1.0.module.min.js"
+        "jquery": "https://code.jquery.com/jquery-4.1.0.module.min.js",
+        "matterJs": "https://cdn.jsdelivr.net/npm/matter-js@0.20.0/+esm"
     }
 }
 </script>

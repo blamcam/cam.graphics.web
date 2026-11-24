@@ -27,7 +27,10 @@ import { draggers } from
 import { hoverThumbs } from
     './hoverThumb.js';
 
-import { openers } from
+import { initPaperPhysics } from
+    './paper.js';
+
+import { openers, closeOpener, openOpener } from
     './opener.js';
 
 const Clamp = (val, min = 0, max = 1) => Math.min(Math.max(val, min), max);
@@ -289,7 +292,9 @@ function processContainerSize() {
 
         const scaleHeight = (1 - Clamp(window.scrollY / (containerHeight)));
 
-        scrollScale.style = "height:" + scaleHeight * containerHeight + "px";
+        // scrollScale.style = "height:" + scaleHeight * containerHeight + "px";
+        scrollScale.style = "transform: scaley(" + scaleHeight * 100 + "%)";
+
 
     }
 
@@ -358,13 +363,64 @@ $('.expandable').on('click', function() {
 watchScroll('.watch-scroll');
 draggers('.draggable');
 hoverThumbs();
-openers();
+
+const paperPhysics = initPaperPhysics();
+
+openers(paperPhysics);
+// openers();
 
 document.querySelectorAll('a').forEach(link => {
   if (link.href === window.location.href) {
     link.classList.add('active');
     link.setAttribute('aria-current', 'page'); // Recommended for accessibility
   }
+});
+
+
+
+// --------------------------------------------------
+// FORM
+// --------------------------------------------------
+
+const form = document.getElementById('form');
+const result = document.getElementById('result');
+
+form.addEventListener('submit', function(e) {
+  e.preventDefault();
+  const formData = new FormData(form);
+  const object = Object.fromEntries(formData);
+  const json = JSON.stringify(object);
+  result.innerHTML = "Please wait..."
+
+    fetch('https://api.web3forms.com/submit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: json
+        })
+        .then(async (response) => {
+            let json = await response.json();
+            if (response.status == 200) {
+                result.innerHTML = json.message;
+            } else {
+                console.log(response);
+                result.innerHTML = json.message;
+            }
+        })
+        .catch(error => {
+            console.log(error);
+            result.innerHTML = "Something went wrong!";
+        })
+        .then(function() {
+            form.reset();
+            closeOpener('#contact-menu', paperPhysics);
+            openOpener('#thanks-menu')
+            // setTimeout(() => {
+            //     result.style.display = "none";
+            // }, 3000);
+        });
 });
 
 // --------------------------------------------------

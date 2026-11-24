@@ -1,33 +1,44 @@
 function hoverThumbs() {
-  const thumbnail = document.querySelector('.hover-thumbnail');
-  const thumbnailImage = thumbnail.querySelector('img');
+    const thumbnail = document.querySelector('.hover-thumbnail');
+    const thumbnailImage = thumbnail.querySelector('img');
 
-  const links = document.querySelectorAll('[data-thumbnail]');
+    const links = document.querySelectorAll('[data-thumbnail]');
 
-  links.forEach(link => {
-      link.addEventListener('mouseenter', () => {
-        console.log("mouse enter");
-          const image = link.dataset.thumbnail;
+    let mouseX = 0;
+    let mouseY = 0;
+    let frameRequested = false;
 
-          if (thumbnailImage.src !== image) {
-              thumbnailImage.src = image;
-          }
+    links.forEach(link => {
+        link.addEventListener('mouseenter', () => {
+            const image = link.dataset.thumbnail;
 
-          thumbnail.classList.add('active');
-      });
-  });
+            if (thumbnailImage.getAttribute('src') !== image) {
+                thumbnailImage.src = image;
+            }
 
-  document.addEventListener('mousemove', e => {
-      thumbnail.style.left = `${e.clientX}px`;
-      thumbnail.style.top = `${e.clientY}px`;
-  });
+            thumbnail.classList.add('active');
+        });
 
-  links.forEach(link => {
-      link.addEventListener('mouseleave', () => {
-          thumbnail.classList.remove('active');
-      });
-  });
+        link.addEventListener('mouseleave', () => {
+            thumbnail.classList.remove('active');
+        });
+    });
 
+    document.addEventListener('mousemove', e => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+
+        if (!frameRequested) {
+            frameRequested = true;
+
+            requestAnimationFrame(() => {
+                thumbnail.style.transform =
+                    `translate3d(${mouseX}px, ${mouseY}px, 0)`;
+
+                frameRequested = false;
+            });
+        }
+    });
 }
 
 export { hoverThumbs };

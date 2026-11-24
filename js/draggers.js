@@ -1,5 +1,9 @@
 
 function draggers(selector) {
+    const isInteractive = target => target.closest(
+        'input, textarea, select, [contenteditable="true"], [data-no-drag]'
+    );
+
     document.querySelectorAll(selector).forEach(element => {
         let isDragging = false;
         let hasDragged = false;
@@ -33,6 +37,8 @@ function draggers(selector) {
         element.addEventListener('pointerdown', e => {
             if (e.button !== 0) return;
             if (window.matchMedia('(pointer: coarse)').matches) return;
+
+            if (isInteractive(e.target)) return;
 
             isDragging = true;
             hasDragged = false;

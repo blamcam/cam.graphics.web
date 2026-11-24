@@ -9,6 +9,8 @@
         </div>
         <div class="right">
             <a href="#" data-open="#project-menu" class="projects-menu-link arrow-before">PROJECTS ↓</a>
+            <a href="#" data-open="#contact-menu" class="projects-menu-link arrow-before">CONTACT ↓</a>
+            <!-- <a href="#" data-open="#thanks-menu" class="projects-menu-link arrow-before">THANKS ↓</a> -->
             <a href="/" class="logo-link"><img src="/assets/logo-cameron-murray-inv.svg"></a>
         </div>
     </div>
@@ -23,18 +25,78 @@
             </div>
         </div>
         <hr>
-        <ul class="project-links box-links">
-            <li><a href="/black-swan-2020/" >Black Swan 2020 Season Campaign</a></li>
-            <li><a href="/karrinyup/" >Karrinyup Spring/Summer 20/21</a></li>
-            <li><a href="/new-junction/" >New Junction</a></li>
-            <li><a href="/road-train-domain/" >Road Train Domain</a></li>
-            <li><a href="/showroom-x/" >Showroom-X</a></li>
-            <li><a href="/sorted-futures/" >Sorted Futures</a></li>
-            <li><a href="/st-catherines/" >St Catherine’s College WEB</a></li>
-            <li><a href="/take1/" >TAKE1 Youth Screen Festival</a></li>
-            <li><a href="/the-fame-project/" >The Fame Project</a></li>
-            <li><a href="/till-death/" >TILL DEATH</a></li>
-            <li><a href="/wanderland/" >WAnderland</a></li>
-        </ul>
+        <div class="paper-box-content">
+            <ul class="project-links box-links">
+                <li><a href="/black-swan-2020/" >Black Swan 2020 Season Campaign</a></li>
+                <li><a href="/karrinyup/" >Karrinyup Spring/Summer 20/21</a></li>
+                <li><a href="/new-junction/" >New Junction</a></li>
+                <li><a href="/road-train-domain/" >Road Train Domain</a></li>
+                <li><a href="/showroom-x/" >Showroom-X</a></li>
+                <li><a href="/sorted-futures/" >Sorted Futures</a></li>
+                <li><a href="/st-catherines/" >St Catherine’s College WEB</a></li>
+                <li><a href="/take1/" >TAKE1 Youth Screen Festival</a></li>
+                <li><a href="/the-fame-project/" >The Fame Project</a></li>
+                <li><a href="/till-death/" >TILL DEATH</a></li>
+                <li><a href="/wanderland/" >WAnderland</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div id="contact-menu" class="paper-box draggable">
+    <div class="paper-box-inner">
+        <div class="paper-box-header">
+            <div class="title"><span>CONTACT</span></div>
+            <div class="close">
+                <a href="#" data-open="#contact-menu">X</a>
+            </div>
+        </div>
+        <hr>
+        <div class="paper-box-content">
+    <!--         <form action="https://api.web3forms.com/submit" method="POST">
+              <input type="hidden" name="access_key" value="026616a2-444a-40b1-bb40-dac949b4e60f">
+              <input type="text" name="name" required>
+              <input type="email" name="email" required>
+              <textarea name="message" required></textarea>
+              <button type="submit">Submit</button>
+            </form> -->
+
+            <p>Email me @ <a href="mailto:cameron@cam.graphics">cameron@cam.graphics</a></p>
+            <p><strong>OR</strong></p>
+
+            <form method="POST" id="form">
+
+                <input type="hidden" name="access_key" value="026616a2-444a-40b1-bb40-dac949b4e60f">
+                <input type="hidden" name="subject" value="New Submission from Web3Forms">
+                <input type="checkbox" name="botcheck" id="" style="display: none;">
+
+                <!-- Custom Form Data -->
+                <label for="email">eMail</label>
+                <input type="email" name="email" id="email" required>
+                <label for="email">Message</label>
+                <textarea name="message" id="message" height="500px" required></textarea>
+
+                <button type="submit">Submit</button>
+
+                <div id="result"></div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="thanks-menu" class="paper-box draggable">
+    <div class="paper-box-inner">
+        <div class="paper-box-header">
+            <div class="title"><span>THANK YOU :-)</span></div>
+            <div class="close">
+                <a href="#" data-open="#thanks-menu">X</a>
+            </div>
+        </div>
+        <hr>
+        <div class="paper-box-content">
+            <p>Thanks for reaching out,<br>
+            I'll get back to you soon!</p>
+        </div>
     </div>
 </div>
