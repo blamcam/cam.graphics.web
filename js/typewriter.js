@@ -22,17 +22,29 @@ function delay(ms, signal) {
 function typewriter() {
     const controller = new AbortController();
     const signal = controller.signal;
+    const parents = document.querySelectorAll('.typewriter');
 
     async function run() {
+        // Wait for fonts to finish loading.
+        if (document.fonts?.ready) {
+            await document.fonts.ready;
+        }
+
+        // Allow the browser to finish layout.
+        await new Promise(requestAnimationFrame);
+        
         const parents = document.querySelectorAll('.typewriter');
 
         for (const pa of parents) {
             if (signal.aborted) return;
 
+            // Measure and lock the original height BEFORE clearing anything.
+            const originalHeight = pa.getBoundingClientRect().height;
+            pa.style.height = `${originalHeight}px`;
+
             const elements = Array.from(pa.querySelectorAll('p, h2')).map(el => {
                 const speed = parseInt(el.getAttribute('data-speed'), 10) || 1;
                 const chars = parseInt(el.getAttribute('data-chars'), 10) || 5;
-
                 const original = el.cloneNode(true);
 
                 el.innerHTML = '';
@@ -47,7 +59,8 @@ function typewriter() {
             }
 
             if (!signal.aborted) {
-                pa.classList.add('typewriter-complete');
+                pa.classList.add("typewriter-complete");
+                pa.style.height = '';
             }
         }
     }
@@ -61,6 +74,10 @@ function typewriter() {
     return () => {
         console.log('Typewriter cleanup triggered');
         controller.abort();
+
+        parents.forEach(pa => {
+            pa.style.height = '';
+        });
     };
 }
 

@@ -10,16 +10,22 @@ function hoverThumbs() {
 
     links.forEach(link => {
         link.addEventListener('mouseenter', () => {
-            const image = link.dataset.thumbnail;
+            if (e.originalEvent.pointerType === 'mouse') {
+                const image = link.dataset.thumbnail;
 
-            if (thumbnailImage.getAttribute('src') !== image) {
-                thumbnailImage.src = image;
+                if (thumbnailImage.getAttribute('src') !== image) {
+                    thumbnailImage.src = image;
+                }
+
+                thumbnail.classList.add('active');
             }
-
-            thumbnail.classList.add('active');
         });
 
         link.addEventListener('mouseleave', () => {
+            thumbnail.classList.remove('active');
+        });
+
+        link.addEventListener('click', () => {
             thumbnail.classList.remove('active');
         });
     });

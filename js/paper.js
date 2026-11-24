@@ -25,6 +25,10 @@ function clamp(value, min, max) {
 }
 
 function initPaperPhysics() {
+
+
+
+
     const engine = Engine.create({
         gravity: {
             x: 0,
@@ -32,6 +36,7 @@ function initPaperPhysics() {
             scale: 0.003
         }
     });
+    Matter.Events.on(engine, 'beforeUpdate', applyScrollForce);
 
     engine.positionIterations = 8;
     engine.velocityIterations = 6;
@@ -274,6 +279,48 @@ function initPaperPhysics() {
         );
     }
 
+    let lastScrollY = window.scrollY;
+    let pendingScrollForce = 0;
+
+    const isMobile = window.matchMedia('(pointer: coarse)').matches;
+    const scrollForce = isMobile ? 0.0007 : 0.0015;
+
+    function handleScroll() {
+        const currentScrollY = window.scrollY;
+        const scrollDelta = currentScrollY - lastScrollY;
+
+        lastScrollY = currentScrollY;
+
+        // Accumulate downward scrolling.
+        if (scrollDelta > 0) {
+            pendingScrollForce += Math.min(scrollDelta, 20);
+        }
+    }
+
+    function applyScrollForce() {
+        if (pendingScrollForce <= 0) return;
+
+        const force = Math.min(pendingScrollForce, 40) * scrollForce;
+        pendingScrollForce = 0;
+
+        papers.forEach(({ body }) => {
+            if (!body || body.isStatic || body === activeDrag?.body) return;
+
+            Body.applyForce(body, body.position, {
+                x: (Math.random() - 0.5) * force * 0.8,
+                y: -force
+            });
+
+            // Add a little random spin.
+            Body.setAngularVelocity(
+                body,
+                body.angularVelocity + random(-0.05, 0.05)
+            );
+        });
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
     // Only intercept pointer events when a paper ball is actually grabbed.
     document.addEventListener('pointerdown', pointerDown, true);
     document.addEventListener('pointermove', pointerMove, true);
@@ -285,6 +332,7 @@ function initPaperPhysics() {
         const delta = Math.min(time - lastFrameTime, 33.333);
         lastFrameTime = time;
 
+        
         Engine.update(engine, delta);
         updatePaperElements();
 
@@ -303,11 +351,14 @@ function initPaperPhysics() {
             cancelAnimationFrame(animationFrame);
 
             window.removeEventListener('resize', updateBounds);
+            window.removeEventListener('scroll', handleScroll);
+            Matter.Events.off(engine, 'beforeUpdate', applyScrollForce);
 
             document.removeEventListener('pointerdown', pointerDown, true);
             document.removeEventListener('pointermove', pointerMove, true);
             document.removeEventListener('pointerup', pointerUp, true);
             document.removeEventListener('pointercancel', pointerUp, true);
+
 
             Engine.clear(engine);
             overlay.remove();
